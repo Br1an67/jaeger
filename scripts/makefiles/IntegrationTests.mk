@@ -47,3 +47,16 @@ index-rollover-integration-test: docker-images-elastic
 .PHONY: tail-sampling-integration-test
 tail-sampling-integration-test:
 	SAMPLING=tail $(MAKE) jaeger-v2-storage-integration-test
+
+# Generate metrics documentation from a Prometheus metrics file
+# Usage: make generate-metrics-docs INPUT=/path/to/metrics.txt OUTPUT=/path/to/output.md
+.PHONY: generate-metrics-docs
+generate-metrics-docs:
+	@if [ -z "$(INPUT)" ]; then \
+		echo "Error: INPUT parameter is required. Usage: make generate-metrics-docs INPUT=/path/to/metrics.txt OUTPUT=/path/to/output.md"; \
+		exit 1; \
+	fi
+	python3 scripts/utils/generate_metrics_docs.py \
+		--input "$(INPUT)" \
+		$(if $(OUTPUT),--output "$(OUTPUT)",) \
+		--title "Jaeger Metrics Reference"
